@@ -1,0 +1,7 @@
+<template>
+  <main class="main">
+    <div class="container">
+
+    </div>
+  </main>
+</template>
