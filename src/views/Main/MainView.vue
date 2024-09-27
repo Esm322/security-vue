@@ -1,4 +1,6 @@
 <template>
+  <BaseHeader />
+
   <main class="main">
     <div class="container">
       <nav class="nav">
@@ -17,18 +19,24 @@
 </template>
 
 <script setup lang="ts">
-import { shallowRef, ref } from 'vue';
+import { shallowRef, ref, onMounted } from 'vue';
 
-import type { LngLat } from '@yandex/ymaps3-types';
+import { useUserStore } from '@/stores/useUser';
+
+import type { ICoords } from '@/interfaces/dataInterfaces';
 
 import BaseMap from '@/components/BaseMap.vue';
 import BaseForm from '@/components/BaseForm.vue';
+import BaseHeader from '@/components/BaseHeader.vue';
 
-type TCoords = {
-  coordinates: LngLat,
-  screenCoordinates: number[],
-}
+const userStore = useUserStore();
 
-const coordinates = shallowRef<null | TCoords[]>(null);
+const coordinates = shallowRef<null | ICoords[]>(null);
 const description = ref<string>('');
+
+onMounted(() => {
+  userStore.getUser()
+});
 </script>
+
+<style lang="scss" scoped></style>

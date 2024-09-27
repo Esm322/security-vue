@@ -67,6 +67,43 @@ $basis: #f3f7fa;
   padding: 10px;
 }
 
+.header__dropdown-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.header__login-menu {
+  position: absolute;
+  min-width: 171px;
+  overflow: hidden;
+  visibility: hidden;
+  background-color: $blue;
+  border-radius: 0 0 25px 25px;
+  z-index: 1;
+  line-height: 0;
+  transition: line-height 0.5s;
+}
+
+.header__login-menu--active {
+  padding: 10px;
+  visibility: visible;
+  line-height: 1.5;
+}
+
+.header__login-menu-item:first-child {
+  margin-bottom: 10px;
+}
+
+.header__login-menu-link {
+  cursor: pointer;
+  transition: border-bottom .3s ease-in-out;
+}
+
+.header__login-menu-link:hover {
+  margin-bottom: -1px;
+  border-bottom: 1px solid #000;
+}
+
 .btn-report {
   display: block;
   margin: 0 auto;

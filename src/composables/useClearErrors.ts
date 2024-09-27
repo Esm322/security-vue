@@ -9,13 +9,13 @@ export default function useClearErrors(generalErrors: IGeneralErrors): void {
       generalErrors.fullnameError ||
       generalErrors.guardLoginError
     ) {
-    setTimeout(() => {
-      generalErrors.emailError = null;
-      generalErrors.passwordError = null;
-      generalErrors.unknownUserError = null;
-      generalErrors.fullnameError = null;
-      generalErrors.repeatedPasswordError = null;
-      generalErrors.guardLoginError = null;
-    }, 3000);
+      setTimeout(() => {
+        generalErrors.emailError = null;
+        generalErrors.passwordError = null;
+        generalErrors.unknownUserError = null;
+        generalErrors.fullnameError = null;
+        generalErrors.repeatedPasswordError = null;
+        generalErrors.guardLoginError = null;
+      }, 3000);
   }
 }

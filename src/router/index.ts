@@ -5,9 +5,10 @@ import { storeToRefs } from 'pinia';
 import { useSecurityStore } from '@/stores/useSecurity';
 
 import PreMainView from '@/views/PreMainView.vue';
-import MainView from '@/views/MainView.vue';
-import SecurityView from '@/views/SecurityView.vue';
-import TaskView from '@/views/TaskView.vue';
+import MainView from '@/views/Main/MainView.vue';
+import SecurityView from '@/views/SecurityViews/SecurityView.vue';
+import TaskView from '@/views/SecurityViews/TaskView.vue';
+import ProfileView from '@/views/Main/ProfileView.vue';
 
 import BaseFormLogin from '@/components/BaseFormLogin.vue';
 import BaseFormRegistration from '@/components/BaseFormRegistration.vue';
@@ -47,9 +48,17 @@ const router = createRouter({
       }
     },
     {
+      name: 'Profile',
+      component: ProfileView,
+      path: '/profile'
+    },
+    {
       name: 'Security',
       component: SecurityView,
       path: '/security',
+       meta: {
+        needAuth: true
+      }
     },
     {
       name: 'Task',

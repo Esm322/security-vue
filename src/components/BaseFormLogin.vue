@@ -37,8 +37,11 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { storeToRefs } from 'pinia';
+
 import { useSecurityStore } from '@/stores/useSecurity';
+import { useUserStore } from '@/stores/useUser';
 
 import useClearErrors from '@/composables/useClearErrors';
 import useHiddenPassword from '@/composables/useHiddenPassword';
@@ -48,7 +51,9 @@ import type { IEmailError, IPasswordError, IUserError } from '@/interfaces/authE
 const router = useRouter();
 
 const store = useSecurityStore();
+const userStore = useUserStore();
 const { isAuth, usersData } = storeToRefs(store);
+const { userEmail } = storeToRefs(userStore);
 
 const inputEmail = ref<string>('');
 const inputPassword = ref<string>('');
@@ -69,8 +74,9 @@ const clearErrors = (): void => useClearErrors(authErrors);
 const { toUncoverPassword, typeInput } = useHiddenPassword();
 
 const toAuth = (): void => {
-  usersData.value.map((user): void => {
+  usersData.value!.forEach((user): void => {
     if (user.email === inputEmail.value && user.password === inputPassword.value) {
+      userEmail.value = inputEmail.value;
       isAuth.value = true;
       router.replace({ name: 'Main' });
     }
