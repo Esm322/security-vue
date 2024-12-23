@@ -1,28 +1,46 @@
 <template>
-  <form class="form">
+  <form class="form"
+    @submit.prevent="store.postTask(user!.phone, user!.fullname, currDescription, currDate, currTitle, coordinates!, clearForm)">
     <label class="form__label">
-      <textarea wrap="hard" minlength="20" cols="60" name="description" class="form__description"
-        placeholder="Укажите правонарушение" required v-model="setDescription"></textarea>
+      <input class="form__input" type="text" placeholder="Укажите вид правонарушения (Н.п.: драка, шум...)" name="title"
+        v-model="currTitle">
+    </label>
+    <label class="form__label">
+      <textarea wrap="hard" cols="60" name="description" class="form__description" placeholder="Опишите правонарушение"
+        required v-model="currDescription"></textarea>
     </label>
     <button class="form__btn-submit btn-reset">
       Отправить
     </button>
+    <p class="form__text-success" v-if="isSended === 2">
+      Отправлено!
+    </p>
+    <p class="form__text-unsuccess" v-else-if="isSended === 3">
+      Не отправлено!
+    </p>
   </form>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref } from 'vue';
 
-const props = defineProps<{
-  description: string
-}>();
+import { storeToRefs } from 'pinia';
+import { useUserStore } from '@/stores/useUser';
 
-const emit = defineEmits<{
-  (event: 'update:description', value: string): void,
-}>();
+const store = useUserStore();
 
-const setDescription = computed({
-  get: (): string => props.description,
-  set: (val): void => emit('update:description', val),
-});
+const { user, isSended, coordinates } = storeToRefs(store);
+
+const currDescription = ref<string>('');
+const currTitle = ref<string>('');
+const currDate = new Date();
+
+const clearForm = () => {
+  setTimeout(() => {
+    currDescription.value = '';
+    currTitle.value = '';
+    isSended.value = 1;
+    coordinates.value = null;
+  }, 2000)
+};
 </script>

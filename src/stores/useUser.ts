@@ -1,54 +1,124 @@
-import { ref } from 'vue';
-import { defineStore, storeToRefs } from 'pinia';
+import { ref, shallowRef } from 'vue';
 
+import { defineStore, storeToRefs } from 'pinia';
 import { useSecurityStore } from './useSecurity';
 
 import { useRouter } from 'vue-router';
 
-import type { IUsers } from '@/interfaces/dataInterfaces';
+import { formatDate } from '@/helpers/formatDate';
+
+import axios, { type AxiosResponse } from 'axios';
+
+import type { IUsers, ITask, ICoordinates, IImmediateTask } from '@/interfaces/dataInterfaces';
 
 export const useUserStore = defineStore('user', () => {
   const router = useRouter();
 
   const store = useSecurityStore();
-  const { usersData, isAuth } = storeToRefs(store);
+  const { usersData } = storeToRefs(store);
 
-  const user = ref<IUsers | null>(null);
+  const cashedUser = localStorage.getItem('user');
+  const cashedUserEmail = localStorage.getItem('email');
+  const user = ref<IUsers | null>();
   const userEmail = ref<string>('');
+  const coordinates = shallowRef<null | ICoordinates[]>(null);
+  const continousCoordinates = ref<null | IImmediateTask[]>(null);
+  const isSended = ref<number>(1);
 
-  function getUser(): void {
-    if (userEmail.value) {
-      user.value = usersData.value!.find((userData: IUsers) => userData.email === userEmail.value);
-    }
-  };
+  user.value = cashedUser !== null ? JSON.parse(cashedUser) : {};
+  userEmail.value = cashedUserEmail !== null ? JSON.parse(cashedUserEmail) : '';
 
-  function changeUser(
-    id: number,
-    // email?: string,
-    fullname?: string,
-    // password?: string,
-  ): void {
-    usersData.value!.forEach((userData: IUsers) => {
-      if (userData.id === id) {
-        // email ? userData.email = email : userData.email;
-        fullname ? userData.fullname = fullname : userData.fullname;
-        // password ? userData.password = password : userData.password;
+  function saveUser() {
+    user.value = usersData.value!.find((userItem) => userItem.email === userEmail.value);
+    localStorage.setItem('email', JSON.stringify(userEmail.value));
+    localStorage.setItem('user', JSON.stringify(user.value));
+  }
+
+  async function postTask(
+    phone: string,
+    fullname: string,
+    description: string,
+    date: Date,
+    title: string,
+    coordinates: ICoordinates[],
+    clearForm: any,
+  ) {
+    try {
+      const response: ITask = await axios.post('http://localhost:3000/api/task', {
+        task_userFullname: fullname,
+        task_userPhone: phone,
+        task_date: formatDate(date),
+        task_description: description,
+        task_title: title,
+        coordinates: coordinates,
+      });
+
+      isSended.value = 2;
+
+      return response;
+    } catch(err) {
+      if (err) {
+        isSended.value = 3;
       }
-    })
+    } finally {
+      clearForm();
+    }
+  }
+
+  async function postImmediateTask(
+    phone: string,
+    fullname: string,
+    date: Date,
+    coordinates: ICoordinates[],
+  ) {
+    try {
+      const response: IImmediateTask = await axios.post('http://localhost:3000/api/immediate_task', {
+        task_userFullname: fullname,
+        task_userPhone: phone,
+        task_date: formatDate(date),
+        coordinates: coordinates,
+      });
+
+      return response;
+    } catch(err) {
+      return err;
+    }
+  }
+
+  async function patchImmediateTask(
+    fullname: string,
+    coordinates: ICoordinates[],
+  ) {
+    try {
+      const response: AxiosResponse = await axios.patch('http://localhost:3000/api/immediate_task', {
+        task_userFullname: fullname,
+        coordinates: coordinates,
+      });
+
+      return response;
+    } catch(err) {
+      return err;
+    }
   }
 
   function outLog(): void {
-    isAuth.value = false;
+    localStorage.removeItem('email');
+    localStorage.removeItem('user');
     user.value = null;
-    userEmail.value = '';
     router.replace({ name: 'login' })
   };
 
   return {
     user,
     userEmail,
-    getUser,
+    cashedUser,
+    saveUser,
     outLog,
-    changeUser,
+    postTask,
+    postImmediateTask,
+    patchImmediateTask,
+    isSended,
+    coordinates,
+    continousCoordinates,
   };
 })

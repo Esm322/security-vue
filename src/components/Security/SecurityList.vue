@@ -1,6 +1,7 @@
 <template>
   <ul class="security__list list-reset">
-    <SecurityTask v-for="task in props.tasks" :key="task.id" />
+    <SecurityTask v-for="task in props.tasks" :key="task.task_id" :date="task.task_date" :id="task.task_id"
+      :title="task.task_title" />
   </ul>
 </template>
 

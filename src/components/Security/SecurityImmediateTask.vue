@@ -1,6 +1,6 @@
 <template>
   <li class="security__item">
-    <router-link :to="{ name: 'Task', params: { id } }" class="security__item-link">
+    <router-link :to="{ name: 'ImmediateTask', params: { id } }" class="security__item-link">
       {{ props.id }}
       <span>
         {{ props.title }}

@@ -56,6 +56,7 @@ const { usersData } = storeToRefs(store);
 const email = ref<string>('');
 const fullname = ref<string>('');
 const password = ref<string>('');
+const phone = ref<string>('');
 const repeatedPassword = ref<string>('');
 const registrationErrors = reactive<{
   emailError: null | IEmailError | string,
@@ -88,8 +89,10 @@ const { toUncoverPassword, typeInput } = useHiddenPassword();
 
 const toRegistrate = (): void => {
   if (isRegistrationErrors.value && isInputsValues()) {
-    usersData.value.push({
+    usersData.value!.push({
+      id: 1,
       email: email.value,
+      phone: phone.value,
       fullname: fullname.value,
       password: password.value
     });

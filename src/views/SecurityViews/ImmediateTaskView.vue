@@ -16,10 +16,6 @@
           </span>
         </div>
 
-        <p class="task__description">
-          {{ task?.task_description }}
-        </p>
-
         <button class="btn-reset task__btn" @click="closeTask()">
           Закрыть задачу
         </button>
@@ -29,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, onUnmounted } from 'vue';
 
 import { useRoute, useRouter } from 'vue-router';
 
@@ -37,7 +33,7 @@ import { useGuardUserStore } from '@/stores/useGuardUser';
 
 import axios, { type AxiosResponse } from 'axios';
 
-import type { ITask } from '@/interfaces/dataInterfaces';
+import type { IImmediateTask } from '@/interfaces/dataInterfaces';
 
 import BaseHeader from '@/components/BaseHeader.vue';
 import BaseMapTask from '@/components/BaseMapTask.vue';
@@ -47,14 +43,14 @@ const router = useRouter();
 
 const store = useGuardUserStore();
 
-const task = ref<ITask | null>(null);
+const task = ref<IImmediateTask | null>(null);
 
-const taskArr = computed<ITask[]>((): ITask[] => {
+const taskArr = computed<IImmediateTask[]>((): IImmediateTask[] => {
   return task.value ? new Array(task.value) : [];
 })
 
 const closeTask = () => {
-  store.patchTask(task.value!.task_id);
+  store.patchImmediateTask(task.value!.task_id);
 
   setTimeout(() => {
     router.replace({ name: 'Security' })
@@ -63,7 +59,7 @@ const closeTask = () => {
 
 const getTask = async () => {
   try {
-    const response: AxiosResponse = await axios.get(`http://localhost:3000/api/task/${route.params.id}`);
+    const response: AxiosResponse = await axios.get(`http://localhost:3000/api/immediate_task/${route.params.id}`);
 
     return task.value = response.data;
   } catch (err) {
@@ -71,7 +67,13 @@ const getTask = async () => {
   }
 };
 
+const updateTask = setInterval(getTask, 2000);
+
 onMounted(() => {
   getTask();
 });
+
+onUnmounted(() => {
+  clearInterval(updateTask);
+})
 </script>

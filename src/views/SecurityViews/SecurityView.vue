@@ -1,33 +1,46 @@
 <template>
+  <BaseHeader />
+
   <main class="main">
     <div class="container security__container">
-      <SecurityList :tasks="test" />
+      <SecurityList :tasks="securityTasksData!" />
+
+      <SecurityImmediateList :immediateTasks="securityImmediateTasksData!" />
+
+      <div class="security__analitics">
+        <BarChart :data="chartConfig" />
+
+        <BarChart :data="chartConfig" />
+
+        <BarChart :data="chartConfig" />
+
+        <BarChart :data="chartConfig" />
+      </div>
     </div>
   </main>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 
 import { storeToRefs } from 'pinia';
-import { useSecurityStore } from '@/stores/useSecurity';
+import { useGuardUserStore } from '@/stores/useGuardUser';
 
-import axios, { type AxiosResponse } from 'axios';
+import useChart from '@/composables/useChart';
 
 import SecurityList from '@/components/Security/SecurityList.vue';
+import SecurityImmediateList from '@/components/Security/SecurityImmediateList.vue';
+import BaseHeader from '@/components/BaseHeader.vue';
+import BarChart from '@/components/BarChart.vue';
 
-const store = useSecurityStore();
-const { securityTasksData } = storeToRefs(store);
+const store = useGuardUserStore();
+const { securityTasksData, securityImmediateTasksData } = storeToRefs(store);
 
-const test = ref([]);
-
-const getTasks = () => {
-  return axios.get('/api/tasks')
-    .then((response: AxiosResponse) => test.value = response.data);
-}
+const { chartConfig } = useChart();
 
 onMounted(() => {
-  // store.getTasksData();
-  getTasks();
+  store.getTasksData();
+  store.getAllTasksData();
+  store.getImmediateTasksData();
 });
 </script>

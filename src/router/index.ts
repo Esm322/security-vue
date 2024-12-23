@@ -1,13 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import { storeToRefs } from 'pinia';
-
-import { useSecurityStore } from '@/stores/useSecurity';
-
 import PreMainView from '@/views/PreMainView.vue';
 import MainView from '@/views/Main/MainView.vue';
 import SecurityView from '@/views/SecurityViews/SecurityView.vue';
 import TaskView from '@/views/SecurityViews/TaskView.vue';
+import ImmediateTaskView from '@/views/SecurityViews/ImmediateTaskView.vue';
 import ProfileView from '@/views/Main/ProfileView.vue';
 
 import BaseFormLogin from '@/components/BaseFormLogin.vue';
@@ -43,9 +40,6 @@ const router = createRouter({
       name: 'Main',
       component: MainView,
       path: '/main',
-      meta: {
-        needAuth: true
-      }
     },
     {
       name: 'Profile',
@@ -56,25 +50,18 @@ const router = createRouter({
       name: 'Security',
       component: SecurityView,
       path: '/security',
-       meta: {
-        needAuth: true
-      }
     },
     {
       name: 'Task',
       component: TaskView,
-      path: '/task:id'
+      path: '/task/:id'
+    },
+    {
+      name: 'ImmediateTask',
+      component: ImmediateTaskView,
+      path: '/immediate_task/:id'
     }
   ]
-})
-
-router.beforeEach((to, from) => {
-  const store = useSecurityStore();
-  const { isAuth } = storeToRefs(store);
-
-  if (!isAuth.value && to.meta.needAuth) {
-    return { name: 'login' }
-  }
 })
 
 export default router

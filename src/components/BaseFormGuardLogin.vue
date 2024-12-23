@@ -53,8 +53,12 @@ const authErrors = reactive<{
   passwordError: null,
 });
 
+// const toAuth = () => {
+//   store.guardAuth(inputLogin.value, inputPassword.value);
+// };
+
 const toAuth = (): void => {
-  guardsData.value.map((guard): void => {
+  guardsData.value!.map((guard): void => {
     if (guard.guardLogin === inputLogin.value && guard.password === inputPassword.value) {
       isAuth.value = true;
       router.replace({ name: 'Security' });

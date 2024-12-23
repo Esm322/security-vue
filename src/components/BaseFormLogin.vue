@@ -52,7 +52,7 @@ const router = useRouter();
 
 const store = useSecurityStore();
 const userStore = useUserStore();
-const { isAuth, usersData } = storeToRefs(store);
+const { usersData } = storeToRefs(store);
 const { userEmail } = storeToRefs(userStore);
 
 const inputEmail = ref<string>('');
@@ -77,7 +77,7 @@ const toAuth = (): void => {
   usersData.value!.forEach((user): void => {
     if (user.email === inputEmail.value && user.password === inputPassword.value) {
       userEmail.value = inputEmail.value;
-      isAuth.value = true;
+      userStore.saveUser();
       router.replace({ name: 'Main' });
     }
 
