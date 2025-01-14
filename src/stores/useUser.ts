@@ -21,7 +21,7 @@ export const useUserStore = defineStore('user', () => {
   const cashedUserEmail = localStorage.getItem('email');
   const user = ref<IUsers | null>();
   const userEmail = ref<string>('');
-  const coordinates = shallowRef<null | ICoordinates[]>(null);
+  const coordinates = shallowRef<null | ITask[]>(null);
   const continousCoordinates = ref<null | IImmediateTask[]>(null);
   const isSended = ref<number>(1);
 
@@ -101,6 +101,22 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  async function closeImmediateTask(
+    fullname: string,
+    phone: string,
+  ) {
+    try {
+      const response: AxiosResponse = await axios.patch('http://localhost:3000/api/user_close_immediate_task', {
+        task_userFullname: fullname,
+        task_userPhone: phone,
+      });
+
+      return response;
+    } catch(err) {
+      return err;
+    }
+  }
+
   function outLog(): void {
     localStorage.removeItem('email');
     localStorage.removeItem('user');
@@ -117,6 +133,7 @@ export const useUserStore = defineStore('user', () => {
     postTask,
     postImmediateTask,
     patchImmediateTask,
+    closeImmediateTask,
     isSended,
     coordinates,
     continousCoordinates,

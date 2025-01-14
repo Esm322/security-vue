@@ -3,25 +3,26 @@
 
   <main class="main">
     <div class="container task__container">
-      <BaseMapTask :coordinates="taskArr" />
+      <BaseMapTask :coordinates="securityTaskArray" v-if="securityTaskArray.length > 0" />
 
       <div class="task__wrapper">
         <div class="task__wrapper-el">
           <h2 class="task__title">
-            {{ task?.task_title }}
+            {{ securityTask?.task_title }}
           </h2>
 
           <span class="task__date">
-            {{ task?.task_date }}
+            {{ securityTask?.task_date }}
           </span>
         </div>
 
         <p class="task__description">
-          {{ task?.task_description }}
+          {{ securityTask?.task_description }}
         </p>
 
-        <button class="btn-reset task__btn" @click="closeTask()">
-          Закрыть задачу
+        <button class="btn-reset task__btn" :disabled="isLoading" @click="closeTask(store.patchTask, securityTask!)">
+          <span v-if="isLoading" class="spinner-16"></span>
+          <span v-else>Закрыть задачу</span>
         </button>
       </div>
     </div>
@@ -29,43 +30,32 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 
+import { storeToRefs } from 'pinia';
 import { useGuardUserStore } from '@/stores/useGuardUser';
 
 import axios, { type AxiosResponse } from 'axios';
 
-import type { ITask } from '@/interfaces/dataInterfaces';
+import useCloseTask from '@/composables/useCloseTask';
 
 import BaseHeader from '@/components/BaseHeader.vue';
 import BaseMapTask from '@/components/BaseMapTask.vue';
 
 const route = useRoute();
-const router = useRouter();
 
 const store = useGuardUserStore();
+const { isLoading, securityTaskArray, securityTask } = storeToRefs(store);
 
-const task = ref<ITask | null>(null);
+const { closeTask } = useCloseTask();
 
-const taskArr = computed<ITask[]>((): ITask[] => {
-  return task.value ? new Array(task.value) : [];
-})
-
-const closeTask = () => {
-  store.patchTask(task.value!.task_id);
-
-  setTimeout(() => {
-    router.replace({ name: 'Security' })
-  }, 2000)
-};
-
-const getTask = async () => {
+async function getTask() {
   try {
     const response: AxiosResponse = await axios.get(`http://localhost:3000/api/task/${route.params.id}`);
 
-    return task.value = response.data;
+    return securityTask.value = response.data;
   } catch (err) {
     console.log(err);
   }
@@ -74,4 +64,9 @@ const getTask = async () => {
 onMounted(() => {
   getTask();
 });
+
+onUnmounted(() => {
+  isLoading.value = false;
+  securityTask.value = null;
+})
 </script>

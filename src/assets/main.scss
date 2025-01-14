@@ -121,8 +121,31 @@ $basis: #f3f7fa;
   margin-right: auto;
 }
 
+.main__sos-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.main__sos-info {
+  margin-right: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: red;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.blink-text {
+  animation: blink 1.5s linear infinite;
+}
+
 .main__btn-sos {
   padding: 10px;
+  align-self: flex-end;
   font-weight: bold;
   background-color: red;
   color: #f3f7fa;
@@ -130,8 +153,26 @@ $basis: #f3f7fa;
 }
 
 .main__btn-sos:hover {
+  outline: 1px solid red;
   color: red;
   background-color: #f3f7fa;
+}
+
+.sos-enter-active {
+  transition: all .5s ease;
+}
+
+.sos-enter-from {
+  transform: translateX(10px);
+  opacity: 0;
+}
+.sos-leave-active {
+  transition: all .5s ease;
+}
+
+.sos-leave-to {
+  transform: translateX(-10px);
+  opacity: 0;
 }
 
 .main__wrapper-map {
@@ -144,7 +185,6 @@ $basis: #f3f7fa;
   margin: 0 auto;
   padding: 20px;
   font-size: 20px;
-  border-radius: 10px;
   background-color: $blue;
   color: $basis;
   transition:
@@ -174,6 +214,7 @@ $basis: #f3f7fa;
 
 .form {
   display: flex;
+  padding: 1px;
   width: calc(100% - 60% - 10px);
   flex-direction: column;
   align-items: center;
@@ -190,19 +231,16 @@ $basis: #f3f7fa;
   height: 100px;
   resize: none;
   border: none;
-  outline: 1px solid #000;
 }
 
 .form__description:focus {
-  outline: none;
-  box-shadow: 0px 0px 6px 2px rgba(137, 175, 224, 0.7);
+  outline: 1px solid #000;
 }
 
 .form__btn-submit {
   margin-bottom: 10px;
   padding: 10px;
   font-size: 15px;
-  border-radius: 10px;
   background-color: $blue;
   color: $basis;
   transition:
@@ -217,11 +255,12 @@ $basis: #f3f7fa;
 }
 
 .fade-enter-active, .fade-leave-active {
-  transition: width .5s ease;
+  transition: all .5s ease;
 }
 
 .fade-enter-from, .fade-leave-to {
-  width: 0;
+  transform: translateX(20px);
+  opacity: 0;
 }
 
 .premain__container {
@@ -245,12 +284,10 @@ $basis: #f3f7fa;
   width: 100%;
   padding: 8px;
   border: none;
-  outline: 1px solid #000;
 }
 
 .form__input:focus {
-  outline: none;
-  box-shadow: 0px 0px 6px 2px rgba(137, 175, 224, 0.7);
+  outline: 1px solid #000;
 }
 
 .form__text-success {
@@ -310,24 +347,54 @@ $basis: #f3f7fa;
   opacity: 1;
 }
 
-.security__container {
-  display: flex;
-}
-
 .security__analitics {
   display: flex;
   flex-wrap: wrap;
-  width: 50%;
 }
 
-.security__analitics-item {
-  width: calc(100% / 2);
-  height: 50%;
+.security__list-tabs {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.security__item-tab {
+  font-size: 24px;
+}
+
+.security__link-tab {
+  display: inline-block;
+  padding: 12px;
+  background-color: #2972f1;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color .3s ease-in-out;
+}
+
+.security__link-tab:hover {
+  color: #2972f1;
+  background-color: transparent;
+}
+
+.tab--active {
+  background-color: #89afe0;
+}
+
+.security__list-wrapper {
+  display: flex;
+}
+
+.shift-enter-active {
+  transition: all 1s ease;
+}
+
+.shift-enter-from, .shift-leave-to {
+  transform: translateY(-20px);
+  opacity: 0;
 }
 
 .security__list {
   width: 50%;
-  height: 80vh;
+  height: 70vh;
   padding: 10px;
   overflow-Y: auto;
   scrollbar-width: thin;
@@ -367,6 +434,10 @@ $basis: #f3f7fa;
 .task__container {
   display: flex;
   font-size: 18px;
+
+  .map {
+    width: 60%;
+  }
 }
 
 .task--active {
@@ -376,26 +447,38 @@ $basis: #f3f7fa;
 .task__wrapper {
   display: flex;
   flex-direction: column;
-  padding: 0 10px;
+  padding-left: 10px;
   width: 40%;
 }
 
 .task__wrapper-el {
   display: flex;
+  margin-bottom: 10px;
+}
+
+.immediate {
+  margin-bottom: auto;
+  flex-direction: column;
+
+  .task__title {
+    margin-bottom: 10px;
+    font-size: 20px;
+  }
 }
 
 .task__title {
   margin-right: auto;
+  font-size: 24px;
 }
 
 .task__description {
+  margin: 0;
   margin-bottom: auto;
 }
 
 .task__btn {
   padding: 10px;
   font-size: 18px;
-  border-radius: 10px;
   background-color: #2972f1;
   color: #f3f7fa;
   transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
@@ -435,4 +518,44 @@ $basis: #f3f7fa;
   line-height: 20px;
 }
 
+.spinner-16 {
+  display: inline-block;
+  font-size: 4px;
+  width: 0;
+  height: 0;
+  position: relative;
+}
+.spinner-16::before,
+.spinner-16::after {
+    content: "";
+    background-color: transparent;
+    position: absolute;
+    left: -4.5em;
+    top: -2em;
+    width: 5em;
+    height: 1em;
+    box-sizing: border-box;
+    border: .3em solid #fff;
+    animation: spinner-16 1s infinite cubic-bezier(0, 0.25, 0.75, 1);
+}
+.spinner-16::before {
+    animation-delay: 0s;
+}
+.spinner-16::after {
+    animation-delay: -.5s;
+}
+@keyframes spinner-16 {
+    0% {
+        opacity: 1;
+        transform: scale(0);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(10);
+    }
+}
+
+@import "1050.scss";
+@import "992.scss";
+@import "768.scss";
 @import "576.scss";

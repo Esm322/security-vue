@@ -1,9 +1,9 @@
 <template>
-  <BaseMap :coordinates="coordinates">
+  <BaseMap :coordinates="coordinates" v-if="props.cashedPosition.length > 0">
     <yandex-map v-model="map" :settings="{
       location: {
-        center: [38.9059877160469, 45.09556471071164],
-        zoom: 16,
+        center: props.cashedPosition,
+        zoom: 17,
       },
     }" width="100%" height="500px">
       <yandex-map-listener :settings="{ onClick: setCoordinates }" />
@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { shallowRef, onMounted } from 'vue';
+import { shallowRef } from 'vue';
 
 import {
   YandexMap,
@@ -46,17 +46,17 @@ import useCurrentPosition from '@/composables/useCurrentPosition';
 
 import BaseMap from './BaseMap.vue';
 
-import type { YMap } from '@yandex/ymaps3-types';
+import type { LngLat, YMap } from '@yandex/ymaps3-types';
+
+const props = defineProps<{
+  cashedPosition: LngLat,
+}>();
 
 const store = useUserStore();
 const { coordinates } = storeToRefs(store);
 
 const map = shallowRef<null | YMap>();
-const { currPosition, getPosition } = useCurrentPosition();
+const { currPosition } = useCurrentPosition();
 
 const setCoordinates = (object: any, event: any) => coordinates.value = [event];
-
-onMounted(() => {
-  getPosition();
-})
 </script>

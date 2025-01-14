@@ -2,8 +2,8 @@
   <BaseMap>
     <yandex-map v-model="map" :settings="{
       location: {
-        center: [38.9059877160469, 45.09556471071164],
-        zoom: 16,
+        center: props.coordinates[0].coordinates,
+        zoom: 18,
       },
     }" width="100%" height="500px">
       <yandex-map-default-features-layer />
@@ -14,19 +14,13 @@
         position="top-center left-center">
         <div class="marker"></div>
       </yandex-map-marker>
-      <template>
-        <yandex-map-marker v-for="(marker, index) in currPosition" :key="index" :settings="marker"
-          position="top-center left-center">
-          <div class="marker-current"></div>
-        </yandex-map-marker>
-      </template>
       <yandex-map-default-scheme-layer />
     </yandex-map>
   </BaseMap>
 </template>
 
 <script setup lang="ts">
-import { shallowRef, onMounted } from 'vue';
+import { shallowRef } from 'vue';
 
 import {
   YandexMap,
@@ -36,8 +30,6 @@ import {
   YandexMapControls,
   YandexMapZoomControl
 } from 'vue-yandex-maps';
-
-import useCurrentPosition from '@/composables/useCurrentPosition';
 
 import BaseMap from './BaseMap.vue';
 
@@ -49,9 +41,4 @@ const props = defineProps<{
 }>();
 
 const map = shallowRef<null | YMap>();
-const { currPosition, getPosition } = useCurrentPosition();
-
-onMounted(() => {
-  getPosition();
-})
 </script>

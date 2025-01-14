@@ -15,13 +15,16 @@
           <li class="main__item-info">
             Кнопка SOS служит для незамедлительного реагирования
           </li>
+          <li class="main__item-info">
+            После нажатия SOS не закрывайте приложение и не блокируйте экран
+          </li>
         </ul>
 
         <SosBtn />
       </div>
 
       <div class="main__wrapper-map">
-        <BaseMapUser />
+        <BaseMapUser :cashedPosition="cashedPosition" />
 
         <Transition name="fade">
           <BaseForm v-if="coordinates" />
@@ -35,6 +38,8 @@
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/stores/useUser';
 
+import useCurrentPosition from '@/composables/useCurrentPosition';
+
 import BaseMapUser from '@/components/BaseMapUser.vue';
 import BaseForm from '@/components/BaseForm.vue';
 import BaseHeader from '@/components/BaseHeader.vue';
@@ -44,4 +49,6 @@ import InfoSVG from '@/components/SVG/InfoSVG.vue';
 
 const store = useUserStore();
 const { coordinates } = storeToRefs(store);
+
+const { cashedPosition } = useCurrentPosition();
 </script>

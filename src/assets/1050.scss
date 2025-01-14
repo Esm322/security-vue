@@ -1,0 +1,11 @@
+@media (max-width: 1050px) {
+  .main__sos-wrapper-btn {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .main__sos-info {
+    margin-right: 0;
+    order: 1;
+  }
+}
