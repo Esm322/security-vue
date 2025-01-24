@@ -7,9 +7,9 @@
 </template>
 
 <script setup lang="ts">
-import type { ICoordinates } from '@/interfaces/dataInterfaces';
+import type { ITask } from '@/interfaces/dataInterfaces';
 
 const props = defineProps<{
-  coordinates?: ICoordinates,
+  coordinates?: ITask[] | null,
 }>();
 </script>

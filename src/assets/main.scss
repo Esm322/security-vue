@@ -440,6 +440,32 @@ $basis: #f3f7fa;
   }
 }
 
+.wrapper-loading {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60%;
+  height: 500px;
+
+  .spinner-16 {
+    position: absolute;
+    font-size: 30px;
+  }
+
+  .spinner-16::before,
+  .spinner-16::after {
+    content: "";
+    background-color: #fff;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    border: .3em solid #2972f1;
+  }
+}
+
 .task--active {
   width: 60%;
 }

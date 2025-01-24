@@ -21,6 +21,7 @@ export interface ITask {
   task_userPhone: string,
   task_userFullname: string,
   task_description: string,
+  task_status: boolean,
   task_title: string,
   coordinates: LngLat,
   screencoordinates: number[],
@@ -31,6 +32,7 @@ export interface IImmediateTask {
   task_date: string,
   task_userPhone: string,
   task_userFullname: string,
+  task_status: boolean,
   task_title: string,
   coordinates: LngLat,
 }

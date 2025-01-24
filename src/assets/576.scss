@@ -87,6 +87,10 @@
     flex-direction: column;
   }
 
+  .task__container .map {
+    width: 100%;
+  }
+
   .task--active {
     width: 100%;
     order: 1;
@@ -95,6 +99,7 @@
   .task__wrapper {
     margin-bottom: 10px;
     width: 100%;
+    order: 1;
   }
 
   .task__description {

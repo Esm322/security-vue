@@ -3,10 +3,15 @@
 
   <main class="main">
     <div class="container task__container">
-      <BaseMapTask :coordinates="securityImmediateTaskArray" v-if="securityImmediateTaskArray.length > 0" />
+      <BaseMapTask :coordinates="securityImmediateTaskArray" v-if="isTaskReceived" />
+
+      <div class="wrapper-loading" v-else>
+        <div class="spinner-16">
+        </div>
+      </div>
 
       <div class="task__wrapper">
-        <div class="task__wrapper-el immediate">
+        <div class=" task__wrapper-el immediate">
           <h2 class="task__title">
             {{ securityImmediateTask?.task_title }}
           </h2>
@@ -21,35 +26,35 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, watch } from 'vue';
+import { onMounted, onUnmounted, watch, ref } from 'vue';
 
 import { useRoute, useRouter } from 'vue-router';
 
 import { storeToRefs } from 'pinia';
 import { useGuardUserStore } from '@/stores/useGuardUser';
 
-import axios, { type AxiosResponse } from 'axios';
+import useTaskArray from '@/composables/useTaskArray';
 
 import BaseHeader from '@/components/BaseHeader.vue';
 import BaseMapTask from '@/components/BaseMapTask.vue';
 
+const api = 'http://localhost:3000/api/immediate_task/';
+
 const route = useRoute();
 const router = useRouter();
 
+const isTaskReceived = ref<boolean>(false);
+
 const store = useGuardUserStore();
-const { isLoading, securityImmediateTask, securityImmediateTaskArray } = storeToRefs(store);
+const { isLoading, securityImmediateTask } = storeToRefs(store);
+
+const { securityImmediateTaskArray } = useTaskArray();
+
+const getImmediateTask = () => store.getTask(route.params.id, api, securityImmediateTask);
 
 const updateTask = setInterval(getImmediateTask, 4000);
 
-async function getImmediateTask() {
-  try {
-    const response: AxiosResponse = await axios.get(`http://localhost:3000/api/immediate_task/${route.params.id}`);
-
-    return securityImmediateTask.value = response.data;
-  } catch (err) {
-    console.log(err);
-  }
-};
+const setIsTaskReceived = () => setTimeout(() => isTaskReceived.value = true, 2000);
 
 watch(securityImmediateTask, () => {
   if (securityImmediateTask.value!.task_status === true) {
@@ -59,6 +64,7 @@ watch(securityImmediateTask, () => {
 
 onMounted(() => {
   getImmediateTask();
+  setIsTaskReceived();
 });
 
 onUnmounted(() => {

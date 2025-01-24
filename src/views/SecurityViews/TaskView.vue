@@ -37,32 +37,24 @@ import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useGuardUserStore } from '@/stores/useGuardUser';
 
-import axios, { type AxiosResponse } from 'axios';
-
 import useCloseTask from '@/composables/useCloseTask';
+import useTaskArray from '@/composables/useTaskArray';
 
 import BaseHeader from '@/components/BaseHeader.vue';
 import BaseMapTask from '@/components/BaseMapTask.vue';
 
 const route = useRoute();
+const api = 'http://localhost:3000/api/task/';
 
 const store = useGuardUserStore();
-const { isLoading, securityTaskArray, securityTask } = storeToRefs(store);
+const { isLoading, securityTask } = storeToRefs(store);
+
+const { securityTaskArray } = useTaskArray();
 
 const { closeTask } = useCloseTask();
 
-async function getTask() {
-  try {
-    const response: AxiosResponse = await axios.get(`http://localhost:3000/api/task/${route.params.id}`);
-
-    return securityTask.value = response.data;
-  } catch (err) {
-    console.log(err);
-  }
-};
-
 onMounted(() => {
-  getTask();
+  store.getTask(route.params.id, api, securityTask);
 });
 
 onUnmounted(() => {

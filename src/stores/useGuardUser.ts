@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import axios, { type AxiosResponse } from 'axios';
 
@@ -11,14 +11,6 @@ export const useGuardUserStore = defineStore('guardUser', () => {
   const securityTask = ref<ITask | null>(null);
   const securityImmediateTask = ref<IImmediateTask | null>(null);
   const isLoading = ref<boolean>(false);
-
-  const securityTaskArray = computed<ITask[] | IImmediateTask[]>((): ITask[] | IImmediateTask[] => {
-    return securityTask.value ? new Array(securityTask.value) : [];
-  });
-
-  const securityImmediateTaskArray = computed<ITask[] | IImmediateTask[]>((): ITask[] | IImmediateTask[] => {
-    return securityImmediateTask.value ? new Array(securityImmediateTask.value) : [];
-  });
 
   async function getAllTasksData(): Promise<ITask[]> {
     const response: AxiosResponse<ITask[]> = await axios.get('http://localhost:3000/api/all_tasks');
@@ -36,6 +28,16 @@ export const useGuardUserStore = defineStore('guardUser', () => {
     const response = await axios.get('http://localhost:3000/api/immediate_tasks');
 
     return securityImmediateTasksData.value = response.data;
+  };
+
+  async function getTask(id: string | string[], api: string, task: ITask | IImmediateTask) {
+    try {
+      const response: AxiosResponse = await axios.get(`${api}${id}`);
+
+      return task.value = response.data;
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   async function patchTask(id: number): Promise<any> {
@@ -68,12 +70,11 @@ export const useGuardUserStore = defineStore('guardUser', () => {
     securityImmediateTasksData,
     securityTask,
     securityImmediateTask,
-    securityTaskArray,
-    securityImmediateTaskArray,
     isLoading,
     getAllTasksData,
     getTasksData,
     getImmediateTasksData,
+    getTask,
     patchTask,
     patchImmediateTask,
   };
